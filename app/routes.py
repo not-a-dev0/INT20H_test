@@ -8,6 +8,10 @@ from app.faceplusplus.faceplusplus_api import FacePlusPlusApi
 @app.route('/')
 def hello_world():
     # return render_template('base.html', data=data)
+
+    photo_urls = FlickrPhotosGetter.get_photos()
+    FacePlusPlusApi.detect_faces(photo_urls)
+
     return render_template('base.html')
 
 

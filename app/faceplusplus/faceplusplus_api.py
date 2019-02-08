@@ -8,12 +8,15 @@ class FacePlusPlusApi:
     @staticmethod
     def detect_faces(urls):
 
-        urls = set()
-        urls.add("http://farm6.staticflickr.com/5747/30323171370_edf2e3f800.jpg")
-        urls.add("http://farm8.staticflickr.com/7913/46095821035_ccca40bf16.jpg")
-        urls.add("http://farm8.staticflickr.com/7837/40045107223_b75ba4842f.jpg")
-        urls.add("http://farm8.staticflickr.com/7847/46095820685_ef299105dd.jpg")
-        urls.add("http://farm5.staticflickr.com/4905/46095820435_a3b1d83a75.jpg")
+        # urls = set()
+        # urls.add("http://farm6.staticflickr.com/5591/30505847492_efc798ce3a.jpg")
+        # urls.add("http://farm6.staticflickr.com/5766/29990860804_6dc30cc955.jpg")
+
+        # urls.add("http://farm6.staticflickr.com/5747/30323171370_edf2e3f800.jpg")
+        # urls.add("http://farm8.staticflickr.com/7913/46095821035_ccca40bf16.jpg")
+        # urls.add("http://farm8.staticflickr.com/7837/40045107223_b75ba4842f.jpg")
+        # urls.add("http://farm8.staticflickr.com/7847/46095820685_ef299105dd.jpg")
+        # urls.add("http://farm5.staticflickr.com/4905/46095820435_a3b1d83a75.jpg")
         # urls.add("http://farm8.staticflickr.com/7890/46095820285_7b2b5ba9ff.jpg")
         # urls.add("http://farm8.staticflickr.com/7886/46095820085_8c577dd37c.jpg")
         # urls.add("http://farm8.staticflickr.com/7879/46095819905_676d2ebd1c.jpg")
@@ -74,19 +77,36 @@ class FacePlusPlusApi:
         for url in urls:
             args["image_url"] = url
             response = requests.post(request_url, args)
-            emotions = set()
+            emotions_on_photo = set()
+            print("\n\n")
             print(url)
             if response.status_code == 200:
                 json_response = response.json()
-                faces = json_response["faces"]
-                for face in faces:
-                    print(face["attributes"]["emotion"])
-                    for emotion in face["attributes"]["emotion"]:
-                        if face["attributes"]["emotion"][emotion] >= 50:
-                            emotions.add(emotion)
-                            break
+                faces = json_response.get("faces")
+                if faces is not None:
+                    # print("there are faces")
+                    for face in faces:
+                        # print("new face:")
+                        attributes = face.get("attributes")
+                        if attributes is not None:
+                            # print("there are attributes")
 
-            results.append((url, emotions))
+                            emotions_on_face = attributes.get("emotion")
+                            if emotions_on_face is not None:
+                                # print("there are emotions on face:")
+                                print(emotions_on_face)
+                                for emotion in emotions_on_face:
+                                    if emotions_on_face[emotion] >= 50:
+                                        emotions_on_photo.add(emotion)
+                                        break
+                #             else:
+                #                 print("there are no emotions on face")
+                #         else:
+                #             print("there are no attributes")
+                # else:
+                #     print("there are no faces")
+
+            results.append((url, emotions_on_photo))
 
         end_time = time()
         print(end_time)
@@ -94,3 +114,6 @@ class FacePlusPlusApi:
         print(end_time - start_time)
 
         print(results)
+
+    # http://farm6.staticflickr.com/5591/30505847492_efc798ce3a.jpg
+    # http://farm6.staticflickr.com/5766/29990860804_6dc30cc955.jpg
