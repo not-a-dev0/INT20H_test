@@ -7,6 +7,8 @@ class FacePlusPlusApi:
 
     @staticmethod
     def detect_faces(urls):
+        if len(urls) == 0:
+            return list()
 
         # urls = set()
         # urls.add("http://farm6.staticflickr.com/5591/30505847492_efc798ce3a.jpg")
@@ -15,6 +17,7 @@ class FacePlusPlusApi:
         # urls.add("http://farm6.staticflickr.com/5747/30323171370_edf2e3f800.jpg")
         # urls.add("http://farm8.staticflickr.com/7913/46095821035_ccca40bf16.jpg")
         # urls.add("http://farm8.staticflickr.com/7837/40045107223_b75ba4842f.jpg")
+
         # urls.add("http://farm8.staticflickr.com/7847/46095820685_ef299105dd.jpg")
         # urls.add("http://farm5.staticflickr.com/4905/46095820435_a3b1d83a75.jpg")
         # urls.add("http://farm8.staticflickr.com/7890/46095820285_7b2b5ba9ff.jpg")
@@ -115,5 +118,4 @@ class FacePlusPlusApi:
 
         print(results)
 
-    # http://farm6.staticflickr.com/5591/30505847492_efc798ce3a.jpg
-    # http://farm6.staticflickr.com/5766/29990860804_6dc30cc955.jpg
+        return results
