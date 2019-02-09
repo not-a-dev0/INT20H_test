@@ -1,71 +1,68 @@
 import requests
 
-import xmltodict as xmltodict
-
-
 class FlickrPhotosGetter:
 
+    ALBUM_OWNER = "144522605@N06"
+    ALBUM_ID = "72157674388093532"
+    API_KEY = "8ff7a9ee623f29351d684a2b6c7e4e14"
+
     @staticmethod
-    def get_photo_urls():
+    def get_all_photo_urls():
+        all_photos = FlickrPhotosGetter.get_photo_urls_from_album()
+        all_photos.update(FlickrPhotosGetter.get_photo_urls_from_tag())
+        return all_photos
 
-        album_owner = "144522605@N06"
-        album_id = "72157674388093532"
 
-        request_url_get_album_photos = "https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=8ff7a9ee623f29351d684a2b6c7e4e14&format=json&nojsoncallback=1&photoset_id=" + album_id
-        "&user_id=" + album_owner
+    @staticmethod
+    def get_album_update_date():
+            album_info = FlickrPhotosGetter.get_album_info()
+            date_update = (album_info['photoset'])['date_update']
+            return date_update
 
-        request_url_get_hashtag_photos = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=8ff7a9ee623f29351d684a2b6c7e4e14&tags=int20h"  # nature - for testing result parsing on more than 100 results
 
-        # should use paggination, because default perpage = 100, and results for hashtag searching could be more than that
+    @staticmethod
+    def get_album_info():
+        request_url_get_album_info = "https://api.flickr.com/services/rest/?method=flickr.photosets.getInfo&api_key=" + \
+                                       FlickrPhotosGetter.API_KEY + \
+                                       "&format=json&nojsoncallback=1&photoset_id=" + FlickrPhotosGetter.ALBUM_ID + \
+                                       "&user_id=" + FlickrPhotosGetter.ALBUM_OWNER
+        response_album_info = requests.post(request_url_get_album_info)
+        print(response_album_info)
+        if response_album_info.status_code == 200:
+            return response_album_info.json()
+        return None
 
-        api_key = "8ff7a9ee623f29351d684a2b6c7e4e14"
+    @staticmethod
+    def get_photo_urls_from_album():
+        request_url_get_album_photos = "https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=" + \
+                                       FlickrPhotosGetter.API_KEY + \
+                                       "&format=json&nojsoncallback=1&photoset_id=" + FlickrPhotosGetter.ALBUM_ID + \
+                                       "&user_id=" + FlickrPhotosGetter.ALBUM_OWNER
+        return FlickrPhotosGetter.get_photo_urls("photoset", request_url_get_album_photos)
 
-        args = dict()
+    @staticmethod
+    def get_photo_urls_from_tag():
+        request_url_get_hashtag_photos = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=" + \
+                                         FlickrPhotosGetter.API_KEY + \
+                                         "&tags=int20h&format=json&nojsoncallback=1"  # nature - for testing result parsing on more than 100 results
+        return FlickrPhotosGetter.get_photo_urls("photos", request_url_get_hashtag_photos)
 
-        # args["api_key"] = api_key
-        # args["format"] = 'json'
-        # args["nojsoncallback"] = 1
-        #
-        # # args["method"] = "flickr.photosets.getPhotos"
-        # # args["method"] = "flickr.photos.search"
-        #
-        #
-        # args["photoset_id"] = "72157674388093532"
-        #
-        # args["user_id"] = "144522605@N06"
-
-        # response = requests.post(request_url, args)
-
+    @staticmethod
+    def get_photo_urls(json_object_name, request_url):
         all_photos = set()
+        args = dict()
+        response_hashtag_photos = requests.post(request_url, args)
 
-        response_album_photos = requests.post(request_url_get_album_photos, args)
-
-        if response_album_photos.status_code == 200:
-            json_response_album_photos = response_album_photos.json()
-            photos = json_response_album_photos["photoset"]["photo"]
-
-            for photo in photos:
+        if response_hashtag_photos.status_code == 200:
+            json_response_hashtag_photos = response_hashtag_photos.json()
+            hashtag_photos = json_response_hashtag_photos[json_object_name]["photo"]
+            for photo in hashtag_photos:
                 photo_link = "http://farm" + str(photo["farm"]) + ".staticflickr.com/" + str(
                     photo["server"]) + "/" + \
                              str(photo["id"]) + "_" + str(photo["secret"]) + ".jpg"
                 # print(photo_link)
                 all_photos.add(photo_link)
 
-        response_hashtag_photos = requests.post(request_url_get_hashtag_photos, args)
-
-        if response_hashtag_photos.status_code == 200:
-
-            xmldict_from_text = xmltodict.parse(response_hashtag_photos.text)
-
-            print(xmldict_from_text["rsp"]["photos"])
-            # number_of_pages = xmldict_from_text["rsp"]["photos"]["@pages"]
-            hashtag_photos = xmldict_from_text["rsp"]["photos"]["photo"]
-            for photo in hashtag_photos:
-                photo_link = "http://farm" + str(photo["@farm"]) + ".staticflickr.com/" + str(
-                    photo["@server"]) + "/" + \
-                             str(photo["@id"]) + "_" + str(photo["@secret"]) + ".jpg"
-                # print(photo_link)
-                all_photos.add(photo_link)
 
         print(all_photos)
         return all_photos

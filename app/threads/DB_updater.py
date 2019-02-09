@@ -20,7 +20,9 @@ class DBUpdater(threading.Thread):
         define which are new, then pass it to Face++ and push results to the DB
         """
         while self.isWorking:
-            flickr_photos = FlickrPhotosGetter.get_photo_urls()
+            last_update_date = FlickrPhotosGetter.get_album_update_date()
+            print(last_update_date)
+            flickr_photos = FlickrPhotosGetter.get_all_photo_urls()
 
             print("\n\nflickr_photos:")
             print(flickr_photos)
