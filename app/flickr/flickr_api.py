@@ -6,7 +6,7 @@ import xmltodict as xmltodict
 class FlickrPhotosGetter:
 
     @staticmethod
-    def get_photos():
+    def get_photo_urls():
 
         album_owner = "144522605@N06"
         album_id = "72157674388093532"
