@@ -42,13 +42,17 @@ class FlickrPhotosGetter:
 
         if response_album_photos.status_code == 200:
             json_response_album_photos = response_album_photos.json()
-            photos = json_response_album_photos['photoset']['photo']
+            # if json_response_album_photos.get()
 
-            for photo in photos:
-                photo_link = 'http://farm' + str(photo['farm']) + '.staticflickr.com/' + str(
-                    photo['server']) + '/' + \
-                             str(photo['id']) + '_' + str(photo['secret']) + '.jpg'
-                all_photos.add(photo_link)
+            photoset = json_response_album_photos.get('photoset')
+            if photoset is not None:
+                photos = photoset.get('photo')
+                if photos is not None:
+                    for photo in photos:
+                        photo_link = 'http://farm' + str(photo['farm']) + '.staticflickr.com/' + str(
+                            photo['server']) + '/' + \
+                                     str(photo['id']) + '_' + str(photo['secret']) + '.jpg'
+                        all_photos.add(photo_link)
 
         response_hashtag_photos = requests.post(request_url_get_hashtag_photos, args)
 
@@ -57,11 +61,16 @@ class FlickrPhotosGetter:
             xmldict_from_text = xmltodict.parse(response_hashtag_photos.text)
 
             # number_of_pages = xmldict_from_text['rsp']['photos']['@pages']
-            hashtag_photos = xmldict_from_text['rsp']['photos']['photo']
-            for photo in hashtag_photos:
-                photo_link = 'http://farm' + str(photo['@farm']) + '.staticflickr.com/' + str(
-                    photo['@server']) + '/' + \
-                             str(photo['@id']) + '_' + str(photo['@secret']) + '.jpg'
-                all_photos.add(photo_link)
+            rsp = xmldict_from_text.get('rsp')
+            if rsp is not None:
+                rsp_photos = rsp.get('photos')
+                if rsp_photos is not None:
+                    hashtag_photos = rsp_photos.get('photo')
+                    if hashtag_photos is not None:
+                        for photo in hashtag_photos:
+                            photo_link = 'http://farm' + str(photo['@farm']) + '.staticflickr.com/' + str(
+                                photo['@server']) + '/' + \
+                                         str(photo['@id']) + '_' + str(photo['@secret']) + '.jpg'
+                            all_photos.add(photo_link)
 
         return all_photos
