@@ -7,6 +7,8 @@ checks photos for duplication, and if there is a face in the photo, it recognize
 ## Built With
 
 * [Flask](http://flask.pocoo.org) - Micro web framework for Python
+* [ArangoDB](https://www.arangodb.com/)  - Native Multi-model Database
+
 
 ## Authors
 
