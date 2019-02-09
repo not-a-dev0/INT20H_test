@@ -10,8 +10,9 @@ class PhotosInfoManager:
         try:
             photos_info_collection = self.arangodb.create_collection('photos_info_collection')
 
+            print()
             # Insert new documents into the collection.
-            photos_info_collection.insert({"photos": []})
+            photos_info_collection.insert({"_key": "photos_info_document", "photos": []})
 
         except:
             print("collection already exists")
