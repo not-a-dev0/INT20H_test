@@ -26,16 +26,33 @@ class FlickrPhotosGetter:
 
     @staticmethod
     def get_photo_urls_from_tag(from_date):
+        all_tag_photos = set()
+        page = 1
         request_url_get_hashtag_photos = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=" + \
                                          FlickrPhotosGetter.API_KEY + \
                                          "&tags=int20h&format=json&nojsoncallback=1&min_upload_date=" + str(from_date)  # nature - for testing result parsing on more than 100 results
-        return FlickrPhotosGetter.get_photo_urls("photos", request_url_get_hashtag_photos)
+        next_page_photos = FlickrPhotosGetter.get_photo_urls("photos", request_url_get_hashtag_photos)
+        all_tag_photos.update(next_page_photos)
+        page += 1
+        while len(next_page_photos) > 0:
+            print(page)
+            request_url_get_hashtag_photos = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=" + \
+                                             FlickrPhotosGetter.API_KEY + \
+                                             "&tags=int20h&format=json&nojsoncallback=1&min_upload_date=" + str(from_date) + \
+                                             "&page=" + str(page)
+                                                    # nature - for testing result parsing on more than 100 results
+            next_page_photos = FlickrPhotosGetter.get_photo_urls("photos", request_url_get_hashtag_photos)
+            all_tag_photos.update(next_page_photos)
+            page += 1
+
+        return all_tag_photos
 
     @staticmethod
     def get_photo_urls(json_object_name, request_url):
         all_photos = set()
         args = dict()
         response_hashtag_photos = requests.post(request_url, args)
+        print(response_hashtag_photos.json())
 
         if response_hashtag_photos.status_code == 200:
             json_response_hashtag_photos = response_hashtag_photos.json()
@@ -47,10 +64,8 @@ class FlickrPhotosGetter:
                 # print(photo_link)
                 all_photos.add(photo_link)
 
-
         print(all_photos)
         return all_photos
-
 
 
     @staticmethod
