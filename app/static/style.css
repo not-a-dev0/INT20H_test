@@ -1,0 +1,109 @@
+body {
+    --anger-color: #FB3054;
+    --disgust-color: #3f9016;
+    --happiness-color: #f9971c;
+    --neutral-color: #e3bf79;
+    --sadness-color: #94d1ef;
+    --surprise-color: #9f7ed7;
+    --fear-color: #986f20;
+
+}
+
+.anger {
+    color: var(--anger-color);
+}
+.disgust {
+    color: var(--disgust-color);
+}
+.happiness{
+    color: var(--happiness-color);
+}
+.neutral {
+    color: var(--neutral-color);
+}
+.sadness {
+    color: var(--sadness-color);
+}
+.surprise {
+    color: var(--surprise-color);
+}
+.fear {
+    color: var(--fear-color);
+}
+
+.btn-anger {
+    color: var(--anger-color);
+    border-color: var(--anger-color);
+}
+
+.btn-anger:hover, .anger-selected {
+    color: white;
+    background-color: var(--anger-color);
+    border-color: var(--anger-color);
+}
+
+.btn-disgust {
+    color: var(--disgust-color);
+    border-color: var(--disgust-color);
+}
+
+.btn-disgust:hover, .disgust-selected {
+    color: white;
+    background-color: var(--disgust-color);
+    border-color: var(--disgust-color);
+}
+
+.btn-happiness {
+    color: var(--happiness-color);
+    border-color: var(--happiness-color);
+}
+
+.btn-happiness:hover, .happiness-selected {
+    color: white;
+    background-color: var(--happiness-color);
+    border-color: var(--happiness-color);
+}
+
+.btn-neutral {
+    color: var(--neutral-color);
+    border-color: var(--neutral-color);
+}
+
+.btn-neutral:hover, .neutral-selected {
+    color: white;
+    background-color: var(--neutral-color);
+    border-color: var(--neutral-color);
+}
+
+.btn-sadness {
+    color: var(--sadness-color);
+    border-color: var(--sadness-color);
+}
+
+.btn-sadness:hover, .sadness-selected {
+    color: white;
+    background-color: var(--sadness-color);
+    border-color: var(--sadness-color);
+}
+
+.btn-surprise {
+    color: var(--surprise-color);
+    border-color: var(--surprise-color);
+}
+
+.btn-surprise:hover, .surprise-selected {
+    color: white;
+    background-color: var(--surprise-color);
+    border-color: var(--surprise-color);
+}
+
+.btn-fear {
+    color: var(--fear-color);
+    border-color: var(--fear-color);
+}
+
+.btn-fear:hover, .fear-selected {
+    color: white;
+    background-color: var(--fear-color);
+    border-color: var(--fear-color);
+}

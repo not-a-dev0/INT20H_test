@@ -16,6 +16,11 @@ class PhotosInfoManager:
         except:
             print("collection already exists")
 
+    def get_all_photos(self):
+        photos_info_collection = self.arangodb.collection('photos_info_collection')
+        photos_info_document = photos_info_collection.get("photos_info_document")
+        return photos_info_document['photos']
+
     def push_photos_info(self, photos_info):
         if len(photos_info) == 0:
             return

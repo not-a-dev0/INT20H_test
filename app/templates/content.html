@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container justify-content-center">
+    <div id="filter" class="">
+        <!--<p class="control" onClick=selectCategory(e)>-->
+        <button type="button" class="btn btn-outline-light btn-anger" onclick="selectEmotion('anger')">anger</button>
+        <button type="button" class="btn btn-outline-dark btn-disgust" onclick="selectEmotion('disgust')">disgust
+        </button>
+        <button type="button" class="btn btn-outline-dark btn-happiness" onclick="selectEmotion('happiness')">
+            happiness
+        </button>
+        <button type="button" class="btn btn-outline-dark btn-neutral" onclick="selectEmotion('neutral')">neutral
+        </button>
+        <button type="button" class="btn btn-outline-dark btn-sadness" onclick="selectEmotion('sadness')">sadness
+        </button>
+        <button type="button" class="btn btn-outline-dark btn-surprise" onclick="selectEmotion('surprise')">surprise
+        </button>
+        <button type="button" class="btn btn-outline-dark btn-fear" onclick="selectEmotion('fear')">fear</button>
+    </div>
+    <hr>
+    <div id="photos">
+        <div class="card-columns">
+            {% for photo in photos %}
+            <div class="card">
+                <img class="card-img-top" src="{{ photo.url }}" alt="Card image cap">
+                {% if (photo.emotions) | length > 0 %}
+                <div class="card-body">
+                    <p class="card-text">{% for emotion in photo.emotions %} <span
+                            class="{{emotion}} text-center">{{emotion}} </span>{%endfor%}</p>
+                </div>
+                {% else %}
+                <div class="card-body">
+                    <p class="card-text">NO EMOTIONS HERE</p>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedEmotions = [];
+
+    let selectEmotion = function (emotion) {
+        let buttonClicked = document.getElementsByClassName("btn-" + emotion)[0];
+        let className = emotion + "-selected";
+        if (selectedEmotions.includes(emotion)) {
+            buttonClicked.classList.remove(className);
+            selectedEmotions.splice(selectedEmotions.indexOf(emotion), 1)
+        } else {
+            buttonClicked.classList.add(className);
+            selectedEmotions.push(emotion)
+        }
+
+        // {photos}}.sort(comparePhotosByEmotions);
+
+        var div = document.querySelector('#photos'),
+            text = document.querySelectorAll('#photos .card-text');
+        console.log(text);
+        var paraArr = [].slice.call(text).sort(comparePhotosByEmotions);
+        console.log(paraArr);
+        // paraArr.forEach(function (p) {
+        //     div.appendChild(p);
+        // });
+
+    };
+
+    function comparePhotosByEmotions(a, b) {
+        for (let emotion in selectedEmotions) {
+            console.log(a);
+            if (a.textContent.includes(emotion) && !b.textContent.includes(emotion)) {
+                return 1
+            } else if (!a.textContent.includes(emotion) && b.textContent.includes(emotion)) {
+                return -1;
+            } else if (a.textContent.includes(emotion) && b.textContent.includes(emotion)) {
+                return 0;
+            }
+        }
+    }
+</script>
+{% endblock %}
