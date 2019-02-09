@@ -78,5 +78,16 @@ class PhotosInfoManager:
 
         return photo_urls
 
+    def update_album_update_date(self, new_date):
+        photos_info_collection = self.arangodb.collection('photos_info_collection')
+        update_date_document = photos_info_collection.get("last_update_date")
+        update_date_document['last_update'] = new_date
+        photos_info_collection.update(update_date_document)
+
+    def get_album_update_date(self):
+        photos_info_collection = self.arangodb.collection('photos_info_collection')
+        update_date_document = photos_info_collection.get("last_update_date")
+        return update_date_document['last_update']
+
 
 photos_info_db_manager = PhotosInfoManager()
