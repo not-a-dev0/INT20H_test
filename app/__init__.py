@@ -9,7 +9,7 @@ try:
     from app import routes
 
     db_updater = DBUpdater("Database Updater")
-    db_updater.start()
+    # db_updater.start()
 
     if __name__ == '__main__':
         app.run(debug=True)
