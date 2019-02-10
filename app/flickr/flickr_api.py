@@ -1,4 +1,5 @@
 import requests
+from app.dbmanager.photos_info_manager import photos_info_db_manager
 
 class FlickrPhotosGetter:
 
@@ -16,6 +17,7 @@ class FlickrPhotosGetter:
     def get_photo_urls_from_album(from_date):
         last_update_date = int(FlickrPhotosGetter.get_album_update_date())
         if last_update_date > from_date:
+            photos_info_db_manager.update_album_update_date(last_update_date)
             request_url_get_album_photos = "https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=" + \
                                            FlickrPhotosGetter.API_KEY + \
                                            "&format=json&nojsoncallback=1&photoset_id=" + FlickrPhotosGetter.ALBUM_ID + \
