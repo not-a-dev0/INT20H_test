@@ -40,7 +40,7 @@ class DBUpdater(threading.Thread):
                     new_photos_info = FacePlusPlusApi.detect_faces(new_photos)
                     photos_info_db_manager.push_photos_info(new_photos_info)
 
-            time.sleep(10)  # in seconds
+            time.sleep(60)  # in seconds
 
     def stop(self):
         self.isWorking = False

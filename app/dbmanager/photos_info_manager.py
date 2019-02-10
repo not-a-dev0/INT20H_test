@@ -13,10 +13,21 @@ class PhotosInfoManager:
             # Insert new documents into the collection.
 
             photos_info_collection.insert({"_key": "photos_info_document", "photos": []})
-            photos_info_collection.insert({"_key": "last_update_date", "update_date": 0})
+            photos_info_collection.insert({"_key": "last_update_date", "last_update": 0})
 
         except:
-            pass
+            photos_info_collection = self.arangodb.collection('photos_info_collection')
+
+            try:
+                photos_info_collection.insert({"_key": "photos_info_document", "photos": []})
+            except:
+                pass
+
+            try:
+                photos_info_collection.insert({"_key": "last_update_date", "last_update": 0})
+            except:
+                pass
+
 
     def get_all_photos(self):
         photos_info_collection = self.arangodb.collection('photos_info_collection')
@@ -61,12 +72,12 @@ class PhotosInfoManager:
     def get_album_update_date(self):
         photos_info_collection = self.arangodb.collection('photos_info_collection')
         try:
-            photos_info_collection.insert({"_key": "last_update_date", "update_date": 0})
+            photos_info_collection.insert({"_key": "last_update_date", "last_update": 0})
         except:
             print("date doc exists")
 
         update_date_document = photos_info_collection.get("last_update_date")
-        return update_date_document['update_date']
+        return update_date_document['last_update']
 
 
 photos_info_db_manager = PhotosInfoManager()
