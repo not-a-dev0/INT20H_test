@@ -94,30 +94,19 @@
                 selectedEmotions.push(emotion);
             }
 
-            var div = document.querySelector('#photos'),
-                text = document.querySelectorAll('#photos .card-text');
-            //console.log(text);
-            // var paraArr = [].slice.call(text).sort(comparePhotosByEmotions);
-            //console.log("paraArr");
-            //console.log(paraArr);
-            //paraArr.forEach(function (p) {
-            //    p.style.display = "none";
-            //});
-            {#console.log(shouldDisplay);#}
-
             var allPhotos = photoParent.children;
-            
+
             if (selectedEmotions.length === 0) {
                 console.log("len 0");
                 for (var j = 0; j < allPhotos.length; j++) {
-                    var card = allPhotos[j].querySelector('.card');
+                    var card = allPhotos[j];
                     card.style.display = "block";
                 }
                 return;
             }
 
             for (var i = 0; i < allPhotos.length; i++) {
-                var photoCard = allPhotos[i].querySelector('.card');
+                var photoCard = allPhotos[i];
                 var photoCardText = photoCard.querySelector('.card-text');
                 {#console.log(photoCardText.textContent);#}
                 if (containsAtLeastOneEmotion(photoCardText.textContent)) {
