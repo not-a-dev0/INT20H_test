@@ -15,7 +15,7 @@ def hello_world():
 
 @app.route('/flickr')
 def flickr_api():
-    FlickrPhotosGetter.get_photo_urls()
+    FlickrPhotosGetter.get_all_photo_urls()
     return 'Flickr API works!'
 
 
