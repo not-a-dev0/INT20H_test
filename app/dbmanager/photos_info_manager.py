@@ -4,8 +4,8 @@ from arango import ArangoClient
 class PhotosInfoManager:
 
     def __init__(self):
-        self.arangodb_client = ArangoClient(protocol='http', host='localhost', port=8529)
-        self.arangodb = self.arangodb_client.db('int20h_test', username='int20h_test_user', password='int20h')
+        self.arangodb_client = ArangoClient(protocol='http', host='172.17.0.1', port=8529)
+        self.arangodb = self.arangodb_client.db('int20h_test', username='root', password='secure')
 
         try:
             photos_info_collection = self.arangodb.create_collection('photos_info_collection')

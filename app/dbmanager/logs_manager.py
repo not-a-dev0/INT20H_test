@@ -5,16 +5,6 @@ import datetime
 from arango import ArangoClient
 
 
-# def singleton(class_):
-#     instances = {}
-#
-#     def getinstance(*args, **kwargs):
-#         if class_ not in instances:
-#             instances[class_] = class_(*args, **kwargs)
-#         return instances[class_]
-#
-#     return getinstance
-
 class Singleton(object):
     _instance = None
 
@@ -32,8 +22,8 @@ class ArangoLogHandler(Singleton, logging.Handler):
 
     def __init__(self):
         super().__init__()
-        self.arangodb_client = ArangoClient(protocol='http', host='localhost', port=8529)
-        self.arangodb = self.arangodb_client.db('int20h_test', username='int20h_test_user', password='int20h')
+        self.arangodb_client = ArangoClient(protocol='http', host='172.17.0.1', port=8529)
+        self.arangodb = self.arangodb_client.db('int20h_test', username='root', password='secure')
 
         try:
             self.arangodb.create_collection('logs')

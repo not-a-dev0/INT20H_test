@@ -4,30 +4,35 @@ import logging.config
 import yaml
 from os import path, makedirs
 
-from app.threads.DB_updater import DBUpdater
 from app.conf.config import Config
+
+from app.dbmanager.logs_manager import ArangoLogHandler
+from app.dbmanager.db_initializer import DBInitializer
+
+from app.db_updater.DB_updater import DBUpdater
+
+DBInitializer.init_db()
+
+if not path.exists('logs'):
+    makedirs('logs')
+    logs_file = open('logs/logs.log', 'x')
+    logs_file.close()
+
+if not path.exists('logs/logs.log'):
+    logs_file = open('logs/logs.log', 'x')
+    logs_file.close()
+
+with open('app/conf/logging.yml', 'r') as stream:
+    logging_config = yaml.load(stream)
+logging.config.dictConfig(logging_config)
+
+logger = logging.getLogger('logger')
 
 try:
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    if not path.exists('logs'):
-        makedirs('logs')
-        logs_file = open('logs/logs.log', 'x')
-        logs_file.close()
-
-    if not path.exists('logs/logs.log'):
-        logs_file = open('logs/logs.log', 'x')
-        logs_file.close()
-
-    with open('app/conf/logging.yml', 'r') as stream:
-        logging_config = yaml.load(stream)
-    logging.config.dictConfig(logging_config)
-
-    from app.dbmanager.logs_manager import ArangoLogHandler
     app.logger.addHandler(ArangoLogHandler())
-
-    logger = logging.getLogger('logger')
 
     # example of using logger
     # logger.debug('debug message')
@@ -49,9 +54,6 @@ try:
     db_updater = DBUpdater('Database Updater')
     db_updater.start()
 
-    if __name__ == '__main__':
-        app.run(debug=True)
-
 
 except Exception as e:
-    exit(-4)
+    logger.warning(e)

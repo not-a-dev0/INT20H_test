@@ -24,6 +24,12 @@ class DBUpdater(threading.Thread):
 
             db_photos = photos_info_db_manager.get_photo_urls()
 
+            print("\n\n\n\n db photos:")
+
+            for x in db_photos:
+                print(x)
+            print("\n\n\n")
+
             new_photos = flickr_photos.difference(db_photos)
 
             if len(new_photos) > 0:
