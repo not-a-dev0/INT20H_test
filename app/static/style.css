@@ -6,6 +6,7 @@ body {
     --sadness-color: #94d1ef;
     --surprise-color: #9f7ed7;
     --fear-color: #986f20;
+    --no-emotions-color: #545353;
 
 }
 
@@ -29,6 +30,9 @@ body {
 }
 .fear {
     color: var(--fear-color);
+}
+.no-emotions {
+    color: var(--no-emotions-color);
 }
 
 .btn-anger {
@@ -106,4 +110,15 @@ body {
     color: white;
     background-color: var(--fear-color);
     border-color: var(--fear-color);
+}
+
+.btn-no-emotions {
+    color: var(--no-emotions-color);
+    border-color: var(--no-emotions-color);
+}
+
+.btn-no-emotions:hover, .no-emotions-selected {
+    color: white;
+    background-color: var(--no-emotions-color);
+    border-color: var(--no-emotions-color);
 }

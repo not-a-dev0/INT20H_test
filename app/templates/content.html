@@ -1,25 +1,29 @@
-{% extends "base.html" %}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    {% extends "base.html" %}
 {% block content %}
+
+
 <div class="container justify-content-center">
     <div id="filter" class="">
         <!--<p class="control" onClick=selectCategory(e)>-->
-        <button type="button" class="btn btn-outline-light btn-anger" onclick="selectEmotion('anger')">anger</button>
-        <button type="button" class="btn btn-outline-dark btn-disgust" onclick="selectEmotion('disgust')">disgust
+        <button type="button" class="btn btn-outline-light btn-anger anger-selected" onclick="selectEmotion('anger')">anger</button>
+        <button type="button" class="btn btn-outline-dark btn-disgust disgust-selected" onclick="selectEmotion('disgust')">disgust
         </button>
-        <button type="button" class="btn btn-outline-dark btn-happiness" onclick="selectEmotion('happiness')">
+        <button type="button" class="btn btn-outline-dark btn-happiness happiness-selected" onclick="selectEmotion('happiness')">
             happiness
         </button>
-        <button type="button" class="btn btn-outline-dark btn-neutral" onclick="selectEmotion('neutral')">neutral
+        <button type="button" class="btn btn-outline-dark btn-neutral neutral-selected" onclick="selectEmotion('neutral')">neutral
         </button>
-        <button type="button" class="btn btn-outline-dark btn-sadness" onclick="selectEmotion('sadness')">sadness
+        <button type="button" class="btn btn-outline-dark btn-sadness sadness-selected" onclick="selectEmotion('sadness')">sadness
         </button>
-        <button type="button" class="btn btn-outline-dark btn-surprise" onclick="selectEmotion('surprise')">surprise
+        <button type="button" class="btn btn-outline-dark btn-surprise surprise-selected" onclick="selectEmotion('surprise')">surprise
         </button>
-        <button type="button" class="btn btn-outline-dark btn-fear" onclick="selectEmotion('fear')">fear</button>
+        <button type="button" class="btn btn-outline-dark btn-fear fear-selected" onclick="selectEmotion('fear')">fear</button>
+        <button type="button" class="btn btn-outline-dark btn-no-emotions no-emotions-selected" onclick="selectEmotion('no-emotions')">no emotions
+        </button>
     </div>
     <hr>
     <div id="photos">
-        <div class="card-columns">
+        <div class="card-columns" id="photos-column">
             {% for photo in photos %}
             <div class="card">
                 <img class="card-img-top" src="{{ photo.url }}" alt="Card image cap">
@@ -40,12 +44,16 @@
 </div>
 
 <script>
-    let selectedEmotions = [];
+    let selectedEmotions = ["happiness", "anger", "disgust", "fear", "sadness", "surprise", "neutral", "no-emotions"];
+    var photoParent = document.getElementById("photos-column")
 
     let selectEmotion = function (emotion) {
+        var shouldDisplay = "block";
         let buttonClicked = document.getElementsByClassName("btn-" + emotion)[0];
         let className = emotion + "-selected";
+
         if (selectedEmotions.includes(emotion)) {
+            shouldDisplay = "none";
             buttonClicked.classList.remove(className);
             selectedEmotions.splice(selectedEmotions.indexOf(emotion), 1)
         } else {
@@ -53,22 +61,38 @@
             selectedEmotions.push(emotion)
         }
 
-        // {photos}}.sort(comparePhotosByEmotions);
-
         var div = document.querySelector('#photos'),
             text = document.querySelectorAll('#photos .card-text');
-        console.log(text);
-        var paraArr = [].slice.call(text).sort(comparePhotosByEmotions);
-        console.log(paraArr);
-        // paraArr.forEach(function (p) {
-        //     div.appendChild(p);
-        // });
+        //console.log(text);
+       // var paraArr = [].slice.call(text).sort(comparePhotosByEmotions);
+        //console.log("paraArr");
+        //console.log(paraArr);
+        //paraArr.forEach(function (p) {
+        //    p.style.display = "none";
+        //});
+        console.log(shouldDisplay);
+        var allPhotos = photoParent.children;
+        if(emotion === "no-emotions"){
+            emotion = "NO EMOTIONS";
+        }
+        for(var i = 0; i < allPhotos.length; i++){
+            var photoCard = allPhotos[i];
+            var photoCardText = photoCard.querySelector('.card-text');
+            console.log(photoCardText.textContent);
+            if(photoCardText.textContent.includes(emotion)){
+                console.log("present");
+                photoCard.style.display = shouldDisplay;
+            }
+        }
+
 
     };
 
+
+
     function comparePhotosByEmotions(a, b) {
         for (let emotion in selectedEmotions) {
-            console.log(a);
+            //console.log(a);
             if (a.textContent.includes(emotion) && !b.textContent.includes(emotion)) {
                 return 1
             } else if (!a.textContent.includes(emotion) && b.textContent.includes(emotion)) {
