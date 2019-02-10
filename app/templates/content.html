@@ -80,23 +80,18 @@
         {#let selectedEmotions = ["happiness", "anger", "disgust", "fear", "sadness", "surprise", "neutral", "no-emotions"];#}
         let selectedEmotions = [];
 
-        var photoParent = document.getElementById("photos-list")
+        var photoParent = document.getElementById("photos-list");
 
         let selectEmotion = function (emotion) {
-            var shouldDisplay = "block";
             let buttonClicked = document.getElementsByClassName("btn-" + emotion)[0];
             let className = emotion + "-selected";
 
             if (selectedEmotions.includes(emotion)) {
-                shouldDisplay = "none";
                 buttonClicked.classList.remove(className);
-                selectedEmotions.splice(selectedEmotions.indexOf(emotion), 1)
-                console.log(selectedEmotions)
-
+                selectedEmotions.splice(selectedEmotions.indexOf(emotion), 1);
             } else {
                 buttonClicked.classList.add(className);
-                selectedEmotions.push(emotion)
-                console.log(selectedEmotions)
+                selectedEmotions.push(emotion);
             }
 
             var div = document.querySelector('#photos'),
@@ -109,23 +104,28 @@
             //    p.style.display = "none";
             //});
             {#console.log(shouldDisplay);#}
+
             var allPhotos = photoParent.children;
-            if (emotion === "no-emotions") {
-                emotion = "NO EMOTIONS";
+            
+            if (selectedEmotions.length === 0) {
+                console.log("len 0");
+                for (var j = 0; j < allPhotos.length; j++) {
+                    var card = allPhotos[j].querySelector('.card');
+                    card.style.display = "block";
+                }
+                return;
             }
+
             for (var i = 0; i < allPhotos.length; i++) {
-                var photoCard = allPhotos[i];
-
-                if (selectedEmotions.length == 0) {
+                var photoCard = allPhotos[i].querySelector('.card');
+                var photoCardText = photoCard.querySelector('.card-text');
+                {#console.log(photoCardText.textContent);#}
+                if (containsAtLeastOneEmotion(photoCardText.textContent)) {
+                    console.log(photoCardText.textContent);
                     photoCard.style.display = "block";
-
-                } else {
-                    var photoCardText = photoCard.querySelector('.card-text');
-                    {#console.log(photoCardText.textContent);#}
-                    if (photoCardText.textContent.includes(emotion)) {
-                        {#console.log("present");#}
-                        photoCard.style.display = shouldDisplay;
-                    }
+                }
+                else{
+                    photoCard.style.display = "none";
                 }
             }
 
@@ -144,6 +144,19 @@
                     return 0;
                 }
             }
+        }
+
+        function containsAtLeastOneEmotion(text){
+            for (var j = 0; j < selectedEmotions.length; j++){
+                var selectedEmotion = selectedEmotions[j];
+                if(selectedEmotion === "no-emotions"){
+                    selectedEmotion = "NO EMOTIONS";
+                }
+                if(text.includes(selectedEmotion)){
+                    return true;
+                }
+            }
+            return false;
         }
     </script>
 {% endblock %}
