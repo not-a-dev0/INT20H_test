@@ -1,0 +1,31 @@
+version: 1
+disable_existing_loggers: False
+formatters:
+  simple:
+    format: '%(asctime)s :  %(filename)30s: %(levelname)8s: %(funcName)35s(): %(lineno)4d:     %(message)s'
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: simple
+    stream: ext://sys.stdout
+  file:
+    class: logging.handlers.RotatingFileHandler
+    formatter: simple
+    filename: logs/logs.log
+    level: DEBUG
+    maxBytes: 4294967296
+    backupCount: 3
+  db:
+    class: app.dbmanager.logs_manager.ArangoLogHandler
+    level: DEBUG
+    formatter: simple
+loggers:
+  logger:
+    level: DEBUG
+    handlers: [file, console, db]
+    propagate: no
+root:
+  level: DEBUG
+  handlers: [console, file]

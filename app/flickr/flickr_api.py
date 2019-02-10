@@ -1,8 +1,8 @@
 import requests
 from app.dbmanager.photos_info_manager import photos_info_db_manager
 
-class FlickrPhotosGetter:
 
+class FlickrPhotosGetter:
     ALBUM_OWNER = "144522605@N06"
     ALBUM_ID = "72157674388093532"
     API_KEY = "8ff7a9ee623f29351d684a2b6c7e4e14"
@@ -32,7 +32,8 @@ class FlickrPhotosGetter:
         page = 1
         request_url_get_hashtag_photos = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=" + \
                                          FlickrPhotosGetter.API_KEY + \
-                                         "&tags=int20h&format=json&nojsoncallback=1&min_upload_date=" + str(from_date)  # nature - for testing result parsing on more than 100 results
+                                         "&tags=int20h&format=json&nojsoncallback=1&min_upload_date=" + str(
+            from_date)  # nature - for testing result parsing on more than 100 results
         next_page_photos = FlickrPhotosGetter.get_photo_urls("photos", request_url_get_hashtag_photos)
         all_tag_photos.update(next_page_photos)
         page += 1
@@ -40,9 +41,10 @@ class FlickrPhotosGetter:
             print(page)
             request_url_get_hashtag_photos = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=" + \
                                              FlickrPhotosGetter.API_KEY + \
-                                             "&tags=int20h&format=json&nojsoncallback=1&min_upload_date=" + str(from_date) + \
+                                             "&tags=int20h&format=json&nojsoncallback=1&min_upload_date=" + str(
+                from_date) + \
                                              "&page=" + str(page)
-                                                    # nature - for testing result parsing on more than 100 results
+            # nature - for testing result parsing on more than 100 results
             next_page_photos = FlickrPhotosGetter.get_photo_urls("photos", request_url_get_hashtag_photos)
             all_tag_photos.update(next_page_photos)
             page += 1
@@ -69,20 +71,18 @@ class FlickrPhotosGetter:
         print(all_photos)
         return all_photos
 
-
     @staticmethod
     def get_album_update_date():
-            album_info = FlickrPhotosGetter.get_album_info()
-            date_update = (album_info['photoset'])['date_update']
-            return date_update
-
+        album_info = FlickrPhotosGetter.get_album_info()
+        date_update = (album_info['photoset'])['date_update']
+        return date_update
 
     @staticmethod
     def get_album_info():
         request_url_get_album_info = "https://api.flickr.com/services/rest/?method=flickr.photosets.getInfo&api_key=" + \
-                                       FlickrPhotosGetter.API_KEY + \
-                                       "&format=json&nojsoncallback=1&photoset_id=" + FlickrPhotosGetter.ALBUM_ID + \
-                                       "&user_id=" + FlickrPhotosGetter.ALBUM_OWNER
+                                     FlickrPhotosGetter.API_KEY + \
+                                     "&format=json&nojsoncallback=1&photoset_id=" + FlickrPhotosGetter.ALBUM_ID + \
+                                     "&user_id=" + FlickrPhotosGetter.ALBUM_OWNER
         response_album_info = requests.post(request_url_get_album_info)
         print(response_album_info)
         if response_album_info.status_code == 200:
