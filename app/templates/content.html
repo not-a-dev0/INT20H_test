@@ -18,6 +18,8 @@
         <button type="button" class="btn btn-outline-dark btn-surprise surprise-selected" onclick="selectEmotion('surprise')">surprise
         </button>
         <button type="button" class="btn btn-outline-dark btn-fear fear-selected" onclick="selectEmotion('fear')">fear</button>
+        <button type="button" class="btn btn-outline-dark btn-no-emotions no-emotions-selected" onclick="selectEmotion('no-emotions')">no emotions
+        </button>
     </div>
     <hr>
     <div id="photos">
@@ -42,7 +44,7 @@
 </div>
 
 <script>
-    let selectedEmotions = ["happiness", "anger", "disgust", "fear", "sadness", "surprise", "neutral"];
+    let selectedEmotions = ["happiness", "anger", "disgust", "fear", "sadness", "surprise", "neutral", "no-emotions"];
     var photoParent = document.getElementById("photos-column")
 
     let selectEmotion = function (emotion) {
@@ -70,6 +72,9 @@
         //});
         console.log(shouldDisplay);
         var allPhotos = photoParent.children;
+        if(emotion === "no-emotions"){
+            emotion = "NO EMOTIONS";
+        }
         for(var i = 0; i < allPhotos.length; i++){
             var photoCard = allPhotos[i];
             var photoCardText = photoCard.querySelector('.card-text');
