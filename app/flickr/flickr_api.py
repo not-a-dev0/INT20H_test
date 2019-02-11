@@ -1,4 +1,5 @@
 import requests
+import time
 from app.dbmanager.photos_info_manager import photos_info_db_manager
 
 
@@ -8,15 +9,17 @@ class FlickrPhotosGetter:
     API_KEY = "8ff7a9ee623f29351d684a2b6c7e4e14"
 
     @staticmethod
-    def get_all_photo_urls(from_date):
+    def get_all_photo_urls(from_date, from_date_for_tag):
         all_photos = FlickrPhotosGetter.get_photo_urls_from_album(from_date)
-        all_photos.update(FlickrPhotosGetter.get_photo_urls_from_tag(from_date))
+        all_photos.update(FlickrPhotosGetter.get_photo_urls_from_tag(from_date_for_tag))
         return all_photos
 
     @staticmethod
     def get_photo_urls_from_album(from_date):
         last_update_date = int(FlickrPhotosGetter.get_album_update_date())
         if last_update_date > from_date:
+            print("last_update_date > from_date")
+            print(last_update_date, ">", from_date)
             photos_info_db_manager.update_album_update_date(last_update_date)
             request_url_get_album_photos = "https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=" + \
                                            FlickrPhotosGetter.API_KEY + \
@@ -28,12 +31,13 @@ class FlickrPhotosGetter:
 
     @staticmethod
     def get_photo_urls_from_tag(from_date):
+        photos_info_db_manager.update_tag_update_date(int(round(time.time())))
         all_tag_photos = set()
         page = 1
         request_url_get_hashtag_photos = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=" + \
                                          FlickrPhotosGetter.API_KEY + \
                                          "&tags=int20h&format=json&nojsoncallback=1&min_upload_date=" + str(
-            from_date)  # nature - for testing result parsing on more than 100 results
+            from_date) 
         next_page_photos = FlickrPhotosGetter.get_photo_urls("photos", request_url_get_hashtag_photos)
         all_tag_photos.update(next_page_photos)
         page += 1
@@ -49,6 +53,7 @@ class FlickrPhotosGetter:
             all_tag_photos.update(next_page_photos)
             page += 1
 
+        print("all_tag_photos len = ", len(all_tag_photos))
         return all_tag_photos
 
     @staticmethod

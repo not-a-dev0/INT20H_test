@@ -21,8 +21,9 @@ class DBUpdater(threading.Thread):
         """
         while self.isWorking:
             last_update_date = photos_info_db_manager.get_album_update_date()
+            last_tag_update_time = photos_info_db_manager.get_tag_update_date()
             print(last_update_date)
-            flickr_photos = FlickrPhotosGetter.get_all_photo_urls(last_update_date)
+            flickr_photos = FlickrPhotosGetter.get_all_photo_urls(last_update_date, last_tag_update_time)
 
             print("\n\nflickr_photos:")
             print(flickr_photos)
